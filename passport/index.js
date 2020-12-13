@@ -1,5 +1,5 @@
 const passport = require("passport");
-const LocalStrategy = require("./localStrategy");
+const localStrategy = require("./localStrategy");
 const User = require("../database/models/user");
 
 const usePassport = _app => {
@@ -20,7 +20,7 @@ const usePassport = _app => {
     });
   });
 
-  passport.use(LocalStrategy(passport));
+  localStrategy(passport);
 
   _app.use(passport.initialize());
   _app.use(passport.session());

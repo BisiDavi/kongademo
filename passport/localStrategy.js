@@ -20,18 +20,21 @@ const genHashedPassword = password => {
   };
 };
 
-export const LocalStrategy = _passport => {
+const localStrategy = _passport => {
   _passport.use(
-    new LocalStrategy({
-      usernameField: "email",
-      passwordField: "password",
-      function(username, password, cb) {
+    new LocalStrategy(
+      {
+        usernameField: "email",
+        passwordField: "password",
+        passReqToCallback: true
+      },
+      function (username, password, cb) {
         User.findOne({ email: username })
           .then(user => {
             if (!user) {
               return cb(null, false);
             }
-            User.comparePassword(password, )
+            User.comparePassword(password);
             const isValid = validPassword(password, user.hash, user.salt);
 
             if (isValid) {
@@ -44,6 +47,8 @@ export const LocalStrategy = _passport => {
             cb(err);
           });
       }
-    })
+    )
   );
 };
+
+module.exports = localStrategy;
