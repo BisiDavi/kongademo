@@ -1,17 +1,23 @@
 const express = require("express");
 const api = express.Router();
+const passport = require("passport");
+const auth = require("./auth");
 const Product = require("../database/models/Product");
 
 /* @GET all products
  *   @Route /api/products
  */
 
-api.get("/products", (req, res) => {
-  Product.find({}, (err, products) => {
-    if (err) res.send("err", err);
-    res.send({ msg: "All available Products", products });
-  });
-});
+api.get(
+  "/products",
+  auth.required,
+  (req, res) => {
+    Product.find({}, (err, products) => {
+      if (err) res.send("err", err);
+      res.send({ msg: "All available Products", products });
+    });
+  }
+);
 
 /* @GET a single product
  * @Route /api/products/:id

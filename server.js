@@ -4,13 +4,14 @@ const session = require("express-session");
 const dbConnection = require("./database");
 const MongoStore = require("connect-mongo")(session);
 const usePassport = require("./passport");
+const flash = require("connect-flash");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const myAppRoutes = require("./routes");
 
 dotenv.config();
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT;
 
 app.use(cors());
 
@@ -30,6 +31,8 @@ app.use(
     saveUninitialized: true
   })
 );
+
+app.use(flash());
 
 usePassport(app);
 

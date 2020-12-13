@@ -5,12 +5,12 @@ const User = mongoose.model("User");
 const auth = require("./auth");
 
 router.get("/users", auth.required, function (req, res, next) {
-  User.findById(req.payload.id)
+  User.find({})
     .then(function (user) {
       if (!user) {
         return res.sendStatus(401);
       }
-      return res.json({ user: user.toAuthJSON() });
+      return res.json({ user });
     })
     .catch(next);
 });
@@ -61,7 +61,8 @@ router.post("/users/login", function (req, res, next) {
   }),
     (err, req, res, next) => {
       if (err) next(err);
-      res.send("You are logged in");
+      res.send("You are logged in", 
+      {user: user.toAuthJSON()});
     };
 });
 
@@ -71,12 +72,12 @@ router.post("/users/register", function (req, res, next) {
   user.lastname = req.body.lastname;
   user.email = req.body.email;
   user.phonenumber = req.body.phonenumber;
-  user.password = user.setPassword(req.body.password);
+  user.password = req.body.password;
 
   user
     .save()
     .then(function () {
-      return res.json({ user: user.toAuthJSON() });
+      return res.json({ user: user });
     })
     .catch(next);
 });
