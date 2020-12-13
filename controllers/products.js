@@ -7,7 +7,7 @@ const Product = require("../database/models/Product");
  *   @Route /api/products
  */
 
-api.get("/products", auth.required, (req, res) => {
+api.get("/products", (_req, res) => {
   Product.find({}, (err, products) => {
     if (err) res.send("err", err);
     res.send({ msg: "All available Products", products });
