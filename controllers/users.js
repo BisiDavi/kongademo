@@ -91,9 +91,14 @@ router.post("/users/register", function (req, res, next) {
 });
 
 router.get("/users/logout", (req, res) => {
-  req.logout();
-  delete req.session();
-  res.redirect("/api/");
+  req.session.destroy(function (err) {
+    if (err) {
+      return next(err);
+    }
+    req.session = null;
+    res.redirect("/api/");
+  });
+  req.logOut();
 });
 
 module.exports = router;
