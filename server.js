@@ -29,7 +29,7 @@ app.use(
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie:{
+    cookie: {
       maxAge: 60000
     }
   })
@@ -41,8 +41,6 @@ usePassport(app);
 
 myAppRoutes(app);
 
-
-
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT: ${PORT}`);
+app.listen(process.env.PORT || 4000, () => {
+  console.log(`Server is running on PORT: ${process.env.PORT || 4000}`);
 });
