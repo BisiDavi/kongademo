@@ -35,7 +35,7 @@ router.put("/users", auth.required, function (req, res, next) {
         phonenumber = req.body.phonenumber;
       }
       if (typeof req.body.password !== "undefined") {
-        password = user.setPassword(req.body.password);
+        user.setPassword(req.body.password);
       }
     })
     .catch(next);
@@ -56,14 +56,22 @@ router.post("/users/login", function (req, res, next) {
     });
   }
 
-  passport.authenticate("local", {
-    failureRedirect: "/users/login"
-  }),
-    (err, req, res, next) => {
-      if (err) next(err);
-      res.send("You are logged in", 
-      {user: user.toAuthJSON()});
-    };
+  passport.authenticate(
+    "local",
+    { session: false },
+    function (err, user, info) {
+      if (err) {
+        return next(err);
+      }
+
+      if (user) {
+        user.token = user.generateJWT();
+        return res.json({ user: user.toAuthJSON() });
+      } else {
+        return res.status(422).json(info);
+      }
+    }
+  )(req, res, next);
 });
 
 router.post("/users/register", function (req, res, next) {
@@ -72,7 +80,7 @@ router.post("/users/register", function (req, res, next) {
   user.lastname = req.body.lastname;
   user.email = req.body.email;
   user.phonenumber = req.body.phonenumber;
-  user.password = req.body.password;
+  user.setPassword(req.body.password);
 
   user
     .save()
