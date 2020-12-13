@@ -92,6 +92,7 @@ router.post("/users/register", function (req, res, next) {
 
 router.get("/users/logout", (req, res) => {
   req.logout();
+  delete req.session();
   res.redirect("/api/");
 });
 
