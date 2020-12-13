@@ -90,4 +90,9 @@ router.post("/users/register", function (req, res, next) {
     .catch(next);
 });
 
+router.get("/users/logout", (req, res) => {
+  req.logout();
+  res.redirect("/api/");
+});
+
 module.exports = router;
